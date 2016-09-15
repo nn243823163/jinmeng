@@ -1,0 +1,118 @@
+<html>
+<head>
+   <meta charset="UTF-8" />
+   <title>香港交易所曲线</title>
+   <script src="http://apps.bdimg.com/libs/jquery/2.1.4/jquery.min.js"></script>
+   <script src="http://code.highcharts.com/highcharts.js"></script>
+</head>
+<body>
+
+<div id="container1" style="width: 550px; height: 300px; margin: 0 auto"></div>
+<br><br>
+<div id="container2" style="width: 550px; height: 300px; margin: 0 auto"></div>
+
+<script language="JavaScript">
+$(document).ready(function() {
+   var xvalues = [];
+   var yvalues1 = [];
+   var yvalues2 = [];
+   var yvalues3 = [];
+   var a = ''
+   count = 0;
+    {% for values in HK %}
+        xvalues[count] = '{{ values.time_hk }}';
+        yvalues1[count] = {{ values.data1}};
+        yvalues2[count] = {{ values.data2}};
+        a = '{{ values.data3}}';
+        yvalues3[count] = parseInt(a.toString().replace('%',''))
+        count = count+1;
+    {% endfor %}
+
+   var title = {
+       text: '香港交易所'
+   };
+   var subtitle = {
+        text: 'Source: runoob.com'
+   };
+   var xAxis = {
+       categories: xvalues
+   };
+   var yAxis1 = {
+      title: {
+         text: 'HongKong '
+      },
+      plotLines: [{
+         value: 0,
+         width: 1,
+         color: '#808080'
+      }]
+   };
+
+   var tooltip = {
+      valueSuffix: '\xB0C'
+   }
+
+   var legend = {
+      layout: 'vertical',
+      align: 'right',
+      verticalAlign: 'middle',
+      borderWidth: 0
+   };
+
+   var series1 =  [
+       {
+         name: 'data1',
+         data: yvalues1
+       },
+       {
+         name: 'data2',
+         data: yvalues2
+       },
+
+   ];
+
+   var series2 =  [
+       {
+         name: 'data3',
+         data: yvalues3
+       },
+
+   ];
+
+   var yAxis2 = {
+      title: {
+         text: '百分比 '
+      },
+      plotLines: [{
+         value: 0,
+         width: 1,
+         color: '#808080'
+      }]
+   };
+   var json1 = {};
+
+   json1.title = title;
+   json1.subtitle = subtitle;
+   json1.xAxis = xAxis;
+   json1.yAxis = yAxis1;
+   json1.tooltip = tooltip;
+   json1.legend = legend;
+   json1.series = series1;
+
+   $('#container1').highcharts(json1);
+
+   var json2 = {};
+
+   json2.title = title;
+   json2.subtitle = subtitle;
+   json2.xAxis = xAxis;
+   json2.yAxis = yAxis2;
+   json2.tooltip = tooltip;
+   json2.legend = legend;
+   json2.series = series2;
+
+   $('#container2').highcharts(json2);
+});
+</script>
+</body>
+</html>

@@ -1,0 +1,54 @@
+{% load staticfiles %}
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>某某某的个人博客</title>
+<script src="http://libs.baidu.com/jquery/1.10.2/jquery.min.js"></script>
+<script src="http://code.highcharts.com/highcharts.js"></script>
+
+
+<!--<link href="{% static 'css/base.css' %}" rel="stylesheet">-->
+<link href="{% static 'css/base.css' %}" rel="stylesheet">
+<link href="{% static 'css/index.css' %}" rel="stylesheet">
+<script type="text/javascript" src="{% static 'js/jquery.min.js' %}"></script>
+<script type="text/javascript" src="{% static 'js/sliders.js' %}"></script>
+<!--[if lt IE 9]>
+<script src="js/modernizr.js"></script>
+<![endif]-->
+</head>
+<body>
+<header>
+  <a id="a_top"></a>
+  <div class="logo">
+      <h1>金盟集团</h1>
+      <p>金盟集团爬虫系统</p>
+  </div>
+  <nav id="topnav" class="f_r">
+    <ul>
+      <a href="/" target="_self">首页</a>
+    </ul>
+    <script src="js/nav.js"></script>
+  </nav>
+</header>
+<article>
+{#  <div class="l_box f_l">#}
+
+    <!-- banner代码 结束 -->
+      {% block content %}
+      {% endblock %}
+{##}
+
+  {% block page_inator %}
+  {% endblock %}
+  <!--r_box end -->
+</article>
+{#<footer>#}
+{#  <p class="ft-copyright">某某某的个人博客 蜀ICP备xxxxxxx号-1</p>#}
+{#  <div id="tbox"> <a id="togbook" href="/"></a> <a id="gotop" href="#a_top"></a> </div>#}
+{#</footer>#}
+    {% block scripts %}
+    {% endblock %}
+
+</body>
+</html>
