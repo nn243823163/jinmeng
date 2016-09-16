@@ -7,6 +7,7 @@ from scrapy.http import Request
 import time
 from peewee import *
 from playhouse.db_url import connect
+import logging.handlers
 
 db = connect('mysql://root:@127.0.0.1:3306/jinmeng_scrapy')  # 连接数据库
 
@@ -19,6 +20,7 @@ class CONTROLER(Model):
     use_days = CharField()
     holidays_used = BooleanField()
     status = CharField()
+    last_run_time = DateTimeField()
     class Meta:
         database = db  # 要连接的数据库
         db_table = 'controler'  # 要映射的数据表,名称与原表一致
@@ -56,19 +58,51 @@ class DmozSpiderSpider(scrapy.Spider):
             item['data2'] = data2
             item['data3'] = data3
 
-            #以下为测试peewee读取controler数据表
+            # 以下为测试peewee读取controler数据表
+            # item = J0301CT60Item()
             # item['time_item'] = hk_controler.time_start
             # item['data1'] = hk_controler.id
             # item['data2'] = hk_controler.id
             # item['data3'] = hk_controler.id
+
+            # 设置时间间隔
+            # time.sleep(hk_controler.time_interval)
+            # 更改状态
+            hk_controler.status = '正常工作'
+            # 更改最后执行时间
+            hk_controler.last_run_time = time.strftime('%Y-%m-%d %H:%M:%S ',time.localtime(time.time()))
+            hk_controler.save()
+
             yield item
+            ####配置循环执行####
+            # yield Request(url=self.start_urls[0], callback=self.parse,dont_filter=True) #设置不过滤重复网址
 
-            #设置时间间隔
-            time.sleep(hk_controler.time_interval)
+        except Exception as e1:
+            try:
+                # time.sleep(hk_controler.time_interval)
+                print '出错,错误1是:',e1  #这里可以输出到控制台
 
-            yield Request(url=self.start_urls[0], callback=self.parse,dont_filter=True) #设置不过滤重复网址
+                # 更改状态
+                hk_controler.status = '发生错误'
+                # 更改最后执行时间
+                hk_controler.last_run_time = time.strftime('%Y-%m-%d %H:%M:%S ',time.localtime(time.time()))
+                hk_controler.save()
 
-        except Exception as e:
-            time.sleep(hk_controler.time_interval)
-            print '出错,错误是:',e
-            yield Request(url=self.start_urls[0], callback=self.parse,dont_filter=True) #设置不过滤重复网址
+                #记录日志
+                LOG_FILE = 'J03_01_C_T60.log'
+                handler = logging.handlers.RotatingFileHandler(LOG_FILE, maxBytes=1024 * 1024, backupCount=5)  # 实例化handler
+                fmt = '%(asctime)s - %(filename)s:%(lineno)s - %(name)s - %(message)s'
+                formatter = logging.Formatter(fmt)  # 实例化formatter
+                handler.setFormatter(formatter)  # 为handler添加formatter
+                logger = logging.getLogger('J03_01_C_T60')  # 获取名为tst的logger
+                logger.addHandler(handler)  # 为logger添加handler
+                logger.setLevel(logging.INFO)
+                logger.info(e1)
+
+                print '退出1'
+                # yield Request(url=self.start_urls[0], callback=self.parse,dont_filter=True) #设置不过滤重复网址
+
+            except Exception as e2:
+                # yield Request(url=self.start_urls[0], callback=self.parse,dont_filter=True) #设置不过滤重复网址
+                print '出错,错误2是:',e2  #这里可以输出到控制台
+                print '退出2'

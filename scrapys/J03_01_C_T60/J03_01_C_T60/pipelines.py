@@ -31,6 +31,6 @@ class JinmengPipeline(object):
 
         hk_jys = HK_JYS(time_hk = item_time,data1 = item_data1,data2 = item_data2,data3 = item_data3)
         hk_jys.save()
-        print 'nnn111'
+        print '插入数据正常'
 
         return item
