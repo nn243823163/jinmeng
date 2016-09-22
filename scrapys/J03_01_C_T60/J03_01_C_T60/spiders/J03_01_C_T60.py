@@ -68,7 +68,7 @@ class DmozSpiderSpider(scrapy.Spider):
             # 设置时间间隔
             # time.sleep(hk_controler.time_interval)
             # 更改状态
-            hk_controler.status = '正常工作'
+            hk_controler.status = '正常'
             # 更改最后执行时间
             hk_controler.last_run_time = time.strftime('%Y-%m-%d %H:%M:%S ',time.localtime(time.time()))
             hk_controler.save()
